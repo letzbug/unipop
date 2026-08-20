@@ -112,4 +112,12 @@ function renderFavorites(){
 async function loadData(){try{const [rt,rs,rl]=await Promise.all([fetch(DATA_URL,{cache:'no-store'}),fetch(SITES_URL+'?v='+Date.now(),{cache:'no-store'}).catch(()=>null),fetch(LOCATIONS_URL+'?v='+Date.now(),{cache:'no-store'}).catch(()=>null)]);if(!rt.ok)throw new Error('Catalogue');trainings=await rt.json();if(rs?.ok){const d=await rs.json();if(Array.isArray(d.locations))sitesData=d;}if(rl?.ok)legacyLocations=await rl.json();$('#catalogueStatus').textContent=`${upcomingCourses().length} cours disponibles`;renderFavorites();}catch(e){console.error(e);$('#catalogueStatus').textContent='Catalogue indisponible — vérifiez votre connexion.'}}
 loadData();
 
-if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js?v=3').catch(()=>{});}
+// v5: avoid stale mixed app versions on GitHub Pages.
+// This app is online-first; remove older service workers/caches without touching localStorage (favorites).
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(regs => Promise.all(regs.map(r => r.unregister()))).catch(()=>{});
+}
+if ('caches' in window) {
+  caches.keys().then(keys => Promise.all(keys.filter(k => /unipop-participant/i.test(k)).map(k => caches.delete(k)))).catch(()=>{});
+}
+
