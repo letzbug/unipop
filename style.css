@@ -693,3 +693,21 @@ html.device-phone .actualite-body p{
 html.device-phone .actualite-more{
   font-size:15px !important;
 }
+
+
+/* =========================================================
+   V15 — Clean home: Actualités directly under search
+   ========================================================= */
+.home-section-actualites-only{
+  padding-top:0 !important;
+}
+.home-section-actualites-only .actualites-home{
+  margin-top:18px !important;
+  padding-top:0 !important;
+  border-top:0 !important;
+}
+html.device-phone .home-section-actualites-only .actualites-home{
+  margin-top:24px !important;
+  padding-top:0 !important;
+  border-top:0 !important;
+}
