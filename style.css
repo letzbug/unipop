@@ -711,3 +711,65 @@ html.device-phone .home-section-actualites-only .actualites-home{
   padding-top:0 !important;
   border-top:0 !important;
 }
+
+
+/* =========================================================
+   V15.1 — Info contact: integrated dark layout, no blue card
+   ========================================================= */
+#viewInfo .info-contact-card{
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  margin-top:30px !important;
+  padding:28px 0 8px !important;
+  border-top:1px solid var(--line,#19334d) !important;
+}
+
+#viewInfo .info-contact-card h2,
+#viewInfo .info-contact-card h3{
+  margin:0 0 18px !important;
+  padding:0 !important;
+  text-align:left !important;
+  font-size:22px !important;
+  line-height:1.25 !important;
+  color:#f4f8fc !important;
+}
+
+#viewInfo .info-contact-card .info-contact-row,
+#viewInfo .info-contact-card a:not(.social-link){
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+}
+
+#viewInfo .info-contact-card .info-contact-row{
+  margin:0 0 11px !important;
+  padding:0 !important;
+}
+
+#viewInfo .info-contact-card .info-contact-row,
+#viewInfo .info-contact-card .info-contact-row a{
+  color:#d9e7f5 !important;
+}
+
+#viewInfo .info-contact-card .social-links{
+  margin-top:20px !important;
+  padding-top:18px !important;
+  border-top:1px solid rgba(130,163,195,.18) !important;
+}
+
+#viewInfo .info-contact-card .social-link{
+  box-shadow:none !important;
+}
+
+/* Phone: larger and easier to read, while keeping desktop untouched */
+html.device-phone #viewInfo .info-contact-card{
+  margin-top:34px !important;
+  padding-top:28px !important;
+}
+html.device-phone #viewInfo .info-contact-card h2,
+html.device-phone #viewInfo .info-contact-card h3{
+  font-size:25px !important;
+  margin-bottom:20px !important;
+}
