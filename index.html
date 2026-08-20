@@ -7,7 +7,7 @@
   <meta name="color-scheme" content="dark">
   <title>UniPop Participant</title>
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
   <div class="app-shell">
@@ -59,9 +59,28 @@
             <div class="info-line"><span>⌖</span><div><strong id="courseVenue"></strong><small id="courseRoom"></small></div></div>
           </div>
           <button id="showLocation" class="primary-btn arrow-btn">Voir le lieu & l'accès <span>→</span></button>
-          <button id="registerCourse" class="register-btn" type="button"><span>↗</span><span><strong>S’inscrire / voir sur UniPop</strong><small>Recherche la page officielle du cours</small></span></button>
+          <button id="registerCourse" class="register-btn" type="button"><span>↗</span><span><strong>S’inscrire sur UniPop</strong><small>Copier le code du cours et ouvrir unipop.lu</small></span></button>
           <section id="courseAboutSection" class="detail-section"><h3>À propos du cours</h3><p id="courseDescription"></p></section>
           <section id="courseMetaSection" class="detail-section meta-grid"></section>
+        </div>
+      </section>
+
+
+      <section id="registrationScreen" class="screen">
+        <header class="topbar"><button data-back class="icon-btn">‹</button><strong>Inscription</strong><span></span></header>
+        <div class="content registration-page">
+          <div class="registration-icon">↗</div>
+          <h1>S’inscrire sur UniPop</h1>
+          <p class="registration-intro">Utilisez le code du cours pour le retrouver rapidement sur le site UniPop.</p>
+          <div class="registration-course-card">
+            <small>Code du cours</small>
+            <div class="registration-code-row"><strong id="registrationCode"></strong><button id="copyCourseCode" type="button">Copier</button></div>
+            <small>Nom du cours</small>
+            <strong id="registrationTitle" class="registration-title"></strong>
+          </div>
+          <div id="copyStatus" class="copy-status" aria-live="polite"></div>
+          <button id="openUnipop" class="primary-btn" type="button">Ouvrir unipop.lu</button>
+          <p class="registration-help">Sur le site UniPop, collez le code dans la recherche pour retrouver le cours.</p>
         </div>
       </section>
 
@@ -105,6 +124,6 @@
       <button data-go="infoScreen"><span>ⓘ</span><small>Info</small></button>
     </nav>
   </div>
-<script src="app.js?v=2"></script>
+<script src="app.js?v=3"></script>
 </body>
 </html>
