@@ -59,6 +59,64 @@ const SITES_URL='https://raw.githubusercontent.com/letzbug/unipop_go_sites/main/
 const LOCATIONS_URL='https://raw.githubusercontent.com/letzbug/unipop_app/main/data/locations.json';
 const SITES_BASE='https://raw.githubusercontent.com/letzbug/unipop_go_sites/main/';
 
+
+const ACTUALITES_URL='./actualites.json';
+
+function actualitesTimeLabel(iso){
+  if(!iso)return '';
+  const d=new Date(iso);
+  if(Number.isNaN(d.getTime()))return '';
+  const diff=Math.max(0,Date.now()-d.getTime());
+  const mins=Math.floor(diff/60000);
+  if(mins<60)return mins<=1?'à l’instant':`il y a ${mins} min`;
+  const hours=Math.floor(mins/60);
+  if(hours<24)return `il y a ${hours} h`;
+  const days=Math.floor(hours/24);
+  if(days<30)return `il y a ${days} j`;
+  return new Intl.DateTimeFormat('fr-LU',{day:'numeric',month:'short',year:'numeric'}).format(d);
+}
+function renderActualites(payload){
+  const section=$('#actualitesSection');
+  const host=$('#actualitesList');
+  if(!section||!host)return;
+  const posts=(payload?.posts||payload||[]).filter(Boolean).slice(0,6);
+  if(!posts.length){
+    section.classList.add('hidden');
+    host.innerHTML='';
+    return;
+  }
+  host.innerHTML=posts.map((p,i)=>{
+    const image=p.image||'';
+    const title=p.title||'Actualité UniPop';
+    const excerpt=p.excerpt||p.text||'';
+    const url=p.url||'https://www.unipop.lu/';
+    const dateLabel=p.relativeDate||actualitesTimeLabel(p.publishedAt);
+    return `<a class="actualite-card" href="${esc(url)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(title)}">
+      ${image?`<div class="actualite-image"><img src="${esc(image)}" alt="" loading="lazy"></div>`:''}
+      <div class="actualite-body">
+        <div class="actualite-meta"><strong>Université Populaire Luxembourg</strong>${dateLabel?`<span>${esc(dateLabel)}</span>`:''}</div>
+        <h3>${esc(title)}</h3>
+        ${excerpt?`<p>${esc(excerpt)}</p>`:''}
+        <span class="actualite-more">Voir plus <b>→</b></span>
+      </div>
+    </a>`;
+  }).join('');
+  section.classList.remove('hidden');
+  const updated=payload?.updatedAt;
+  const fresh=$('#actualitesFreshness');
+  if(fresh)fresh.textContent=updated?`Mis à jour ${actualitesTimeLabel(updated)}`:'';
+}
+async function loadActualites(){
+  try{
+    const r=await fetch(`${ACTUALITES_URL}?v=${Date.now()}`,{cache:'no-store'});
+    if(!r.ok)throw new Error(`Actualités ${r.status}`);
+    renderActualites(await r.json());
+  }catch(err){
+    console.warn('Actualités indisponibles',err);
+    $('#actualitesSection')?.classList.add('hidden');
+  }
+}
+
 let trainings=[];
 let sitesData={schemaVersion:3,guides:[],locations:[]};
 let legacyLocations={};
@@ -229,6 +287,7 @@ function renderFavorites(){
 
 async function loadData(){try{const [rt,rs,rl]=await Promise.all([fetch(DATA_URL,{cache:'no-store'}),fetch(SITES_URL+'?v='+Date.now(),{cache:'no-store'}).catch(()=>null),fetch(LOCATIONS_URL+'?v='+Date.now(),{cache:'no-store'}).catch(()=>null)]);if(!rt.ok)throw new Error('Catalogue');trainings=await rt.json();if(rs?.ok){const d=await rs.json();if(Array.isArray(d.locations))sitesData=d;}if(rl?.ok)legacyLocations=await rl.json();$('#catalogueStatus').textContent=`${upcomingCourses().length} cours disponibles`;renderFavorites();}catch(e){console.error(e);$('#catalogueStatus').textContent='Catalogue indisponible — vérifiez votre connexion.'}}
 loadData();
+loadActualites();
 
 // v6: UniPop-only discovery list + cache safety.
 // This app is online-first; remove older service workers/caches without touching localStorage (favorites).

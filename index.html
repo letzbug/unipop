@@ -7,7 +7,7 @@
   <meta name="color-scheme" content="dark">
   <title>UniPop Participant</title>
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="style.css?v=13">
+  <link rel="stylesheet" href="style.css?v=14">
 </head>
 <body>
   <div class="app-shell">
@@ -37,6 +37,17 @@
             <article><span>⌖</span><strong>Accès & itinéraire</strong><small>Adresse, parking, transports</small></article>
             <article><span>▤</span><strong>Préparez votre visite</strong><small>Salle, plans et tutoriels</small></article>
           </div>
+
+          <section id="actualitesSection" class="actualites-home hidden" aria-labelledby="actualitesTitle">
+            <div class="actualites-heading">
+              <div>
+                <span class="actualites-kicker">UniPop</span>
+                <h2 id="actualitesTitle">Actualités</h2>
+              </div>
+              <span id="actualitesFreshness" class="actualites-freshness"></span>
+            </div>
+            <div id="actualitesList" class="actualites-list" aria-live="polite"></div>
+          </section>
         </section>
       </section>
 
@@ -135,6 +146,6 @@
       <button data-go="infoScreen"><span>ⓘ</span><small>Info</small></button>
     </nav>
   </div>
-<script src="app.js?v=13"></script>
+<script src="app.js?v=14"></script>
 </body>
 </html>
