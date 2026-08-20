@@ -1,4 +1,39 @@
 
+function refreshParticipantDeviceClass(){
+  const root=document.documentElement;
+  const ua=navigator.userAgent||"";
+  const touch=navigator.maxTouchPoints||0;
+  const isIPhone=/iPhone|iPod/i.test(ua);
+  const isIPad=/iPad/i.test(ua)||(navigator.platform==="MacIntel"&&touch>1);
+  const isAndroid=/Android/i.test(ua);
+  const isAndroidPhone=isAndroid&&/Mobile/i.test(ua);
+  const isAndroidTablet=isAndroid&&!/Mobile/i.test(ua);
+
+  let mode="desktop";
+  const physicalShortSide=Math.min(
+    screen.width||window.innerWidth,
+    screen.height||window.innerHeight
+  );
+  const physicalPhone=touch>0&&physicalShortSide<=600;
+
+  if(isIPhone||isAndroidPhone||physicalPhone) mode="phone";
+  else if(isIPad||isAndroidTablet) mode="tablet";
+  else {
+    const shortSide=Math.min(window.innerWidth,window.innerHeight);
+    if(touch>0&&shortSide<=1100) mode="tablet";
+    else if(shortSide<=520) mode="phone";
+    else if(shortSide<=1100) mode="tablet";
+  }
+
+  root.classList.remove("device-phone","device-tablet","device-desktop");
+  root.classList.add("device-"+mode);
+  root.dataset.device=mode;
+}
+window.addEventListener("resize",refreshParticipantDeviceClass,{passive:true});
+window.addEventListener("orientationchange",refreshParticipantDeviceClass,{passive:true});
+refreshParticipantDeviceClass();
+
+
 function participantLocalTodayStart() {
   const now = new Date();
   return new Date(now.getFullYear(), now.getMonth(), now.getDate());
