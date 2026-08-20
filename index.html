@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#06111f">
+  <meta name="color-scheme" content="dark">
+  <title>UniPop Participant</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="style.css?v=1">
+</head>
+<body>
+  <div class="app-shell">
+    <main>
+      <section id="searchScreen" class="screen active">
+        <div class="hero-home">
+          <div class="brand" aria-label="UniPop">
+            <span class="brand-mark"><i></i><b></b></span>
+            <span>Uni<span>Pop</span></span>
+          </div>
+          <h1>Bienvenue !</h1>
+          <p>Entrez le nom ou le code de votre cours pour retrouver toutes les informations utiles.</p>
+
+          <div class="search-wrap">
+            <span class="search-icon">⌕</span>
+            <input id="courseSearch" type="search" autocomplete="off" inputmode="search" placeholder="Code ou nom du cours" aria-label="Rechercher un cours">
+            <button id="clearSearch" class="clear-btn" type="button" aria-label="Effacer">×</button>
+          </div>
+          <div id="suggestions" class="suggestions hidden"></div>
+          <button id="searchButton" class="primary-btn" type="button">Rechercher</button>
+          <p id="catalogueStatus" class="status">Chargement du catalogue…</p>
+        </div>
+
+        <section class="home-section">
+          <div class="section-title-row"><h2>Retrouver votre cours</h2><span class="soft-pill">UniPop</span></div>
+          <div class="feature-grid">
+            <article><span>⌕</span><strong>Recherche rapide</strong><small>Par code ou par nom</small></article>
+            <article><span>⌖</span><strong>Accès & itinéraire</strong><small>Adresse, parking, transports</small></article>
+            <article><span>▤</span><strong>Préparez votre visite</strong><small>Salle, plans et tutoriels</small></article>
+          </div>
+        </section>
+      </section>
+
+      <section id="resultsScreen" class="screen">
+        <header class="topbar"><button data-back class="icon-btn">‹</button><strong>Résultats</strong><span></span></header>
+        <div class="content">
+          <h2 id="resultsTitle">Cours trouvés</h2>
+          <div id="resultsList" class="course-list"></div>
+        </div>
+      </section>
+
+      <section id="courseScreen" class="screen">
+        <header class="topbar"><button data-back class="icon-btn">‹</button><strong>Détails du cours</strong><button id="favoriteTop" class="icon-btn" title="Favori">♡</button></header>
+        <div id="courseHero" class="course-hero"></div>
+        <div class="content detail-content">
+          <div class="code-row"><span id="courseCode" class="code-chip"></span><span id="courseCategory" class="muted"></span></div>
+          <h1 id="courseTitle"></h1>
+          <div class="info-stack">
+            <div class="info-line"><span>▣</span><div><strong id="courseDates"></strong><small id="courseSchedule"></small></div></div>
+            <div class="info-line"><span>⌖</span><div><strong id="courseVenue"></strong><small id="courseRoom"></small></div></div>
+          </div>
+          <button id="showLocation" class="primary-btn arrow-btn">Voir le lieu & l'accès <span>→</span></button>
+          <section id="courseAboutSection" class="detail-section"><h3>À propos du cours</h3><p id="courseDescription"></p></section>
+          <section id="courseMetaSection" class="detail-section meta-grid"></section>
+        </div>
+      </section>
+
+      <section id="locationScreen" class="screen">
+        <header class="topbar"><button data-back class="icon-btn">‹</button><strong>Lieu</strong><span></span></header>
+        <div id="locationHero" class="location-hero"></div>
+        <div class="content detail-content">
+          <h1 id="locationName"></h1>
+          <p id="locationAddress" class="address"></p>
+          <div class="map-actions"><a id="googleMaps" target="_blank" rel="noopener">Google Maps</a><a id="appleMaps" target="_blank" rel="noopener">Apple Plans</a></div>
+          <p id="locationDescription" class="lead"></p>
+          <section id="accessSection" class="detail-section"><h3>Accès & transport</h3><div id="accessCards" class="stack-cards"></div></section>
+          <section id="gallerySection" class="detail-section"><h3>Photos</h3><div id="gallery" class="photo-grid"></div></section>
+          <section id="roomSection" class="detail-section"><h3>Salle</h3><div id="roomCard"></div></section>
+          <section id="resourcesSection" class="detail-section"><h3>Informations utiles</h3><div id="resources"></div></section>
+          <section id="contactSection" class="detail-section"><h3>Contact</h3><div id="contactCards" class="stack-cards"></div></section>
+        </div>
+      </section>
+
+      <section id="favoritesScreen" class="screen">
+        <header class="topbar"><span></span><strong>Favoris</strong><span></span></header>
+        <div class="content"><h2>Mes cours enregistrés</h2><div id="favoritesList" class="course-list"></div></div>
+      </section>
+
+      <section id="infoScreen" class="screen">
+        <header class="topbar"><span></span><strong>Informations</strong><span></span></header>
+        <div class="content info-page">
+          <div class="brand small"><span class="brand-mark"><i></i><b></b></span><span>Uni<span>Pop</span></span></div>
+          <h1>UniPop Participant</h1>
+          <p>Retrouvez votre cours, votre lieu, votre salle et les informations pratiques avant votre arrivée.</p>
+          <div class="info-card"><strong>Données</strong><p>Les informations de cours proviennent du catalogue UniPop. Les informations de lieux, salles, photos, plans et tutoriels sont fournies par UniPop Go Sites.</p></div>
+          <div class="credits"><strong>Built by Frank G</strong><span>Product Developer & Solution Designer</span><strong>Cameron</strong><span>AI Development Partner / Full-Stack Implementation</span></div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Navigation principale">
+      <button data-go="searchScreen" class="active"><span>⌕</span><small>Recherche</small></button>
+      <button data-go="resultsScreen"><span>▣</span><small>Mes cours</small></button>
+      <button data-go="favoritesScreen"><span>♡</span><small>Favoris</small></button>
+      <button data-go="infoScreen"><span>ⓘ</span><small>Info</small></button>
+    </nav>
+  </div>
+<script src="app.js?v=1"></script>
+</body>
+</html>

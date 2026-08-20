@@ -1,0 +1,10 @@
+{
+  "name":"UniPop Participant",
+  "short_name":"UniPop",
+  "start_url":"./",
+  "display":"standalone",
+  "background_color":"#06111f",
+  "theme_color":"#06111f",
+  "lang":"fr",
+  "icons":[]
+}
