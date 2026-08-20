@@ -1,3 +1,24 @@
+
+function participantLocalTodayStart() {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+}
+function participantCourseStartDate(course) {
+  const raw = course?.date_debut ?? course?.dateDebut ?? course?.start_date ?? course?.startDate ?? course?.date ?? course?.dates?.[0];
+  if (!raw) return null;
+  if (typeof raw === "string") {
+    const ymd = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (ymd) return new Date(+ymd[1], +ymd[2]-1, +ymd[3]);
+  }
+  const d = new Date(raw);
+  return Number.isNaN(d.getTime()) ? null : new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+function participantIsDiscoverableUniPop(course) {
+  const org = String(course?.organisateur?.code ?? course?.organizer?.code ?? course?.organisateurCode ?? "").toUpperCase();
+  const d = participantCourseStartDate(course);
+  return org === "UNIPOP" && d && d >= participantLocalTodayStart();
+}
+
 const DATA_URL='https://raw.githubusercontent.com/letzbug/franks_magic/ee1deb187cb56360699bb18606d7685de65d9e6c/data/trainings.json';
 const SITES_URL='https://raw.githubusercontent.com/letzbug/unipop_go_sites/main/sites.json';
 const LOCATIONS_URL='https://raw.githubusercontent.com/letzbug/unipop_app/main/data/locations.json';

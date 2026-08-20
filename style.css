@@ -37,3 +37,16 @@
   .info-page > p { font-size: 16px; line-height: 1.65; }
   .info-page .simple-credit { font-size: 12px; }
 }
+
+/* v8 */
+.unipop-contact-card{
+  margin-top:32px;padding:22px;border-radius:18px;background:#062a67;color:#fff;
+}
+.unipop-contact-card h2{margin:0 0 14px;font-size:22px}
+.unipop-contact-card>a{display:flex;gap:12px;align-items:center;color:#fff;text-decoration:none;font-size:18px;margin:9px 0}
+.social-links{display:flex;gap:12px;margin-top:20px}
+.social-links a{
+  width:42px;height:42px;border-radius:50%;display:grid;place-items:center;
+  background:#91e0dc;color:#062a67;text-decoration:none;font-weight:800;font-size:21px;
+}
+.info-page .simple-credit{margin-top:42px;padding:22px 0 max(12px,env(safe-area-inset-bottom));text-align:center}
