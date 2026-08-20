@@ -74,9 +74,55 @@ function doSearch(){const q=$('#courseSearch').value.trim();if(!q)return;const r
 function renderResults(list,title='Cours trouvés'){lastResults=list;$('#resultsTitle').textContent=title;const host=$('#resultsList');host.innerHTML=list.length?list.map(courseCard).join(''):`<div class="empty">Aucun cours trouvé.</div>`;host.querySelectorAll('.course-card').forEach(el=>el.onclick=()=>openCourse(trainings.find(c=>String(c.id)===el.dataset.id)));}
 function courseCard(c){return `<article class="course-card" data-id="${esc(c.id)}"><div><h3>${esc(titleOf(c))}</h3><p>${esc(codeOf(c))}</p><p>${esc(c.dateDebut||'')} → ${esc(c.dateFin||'')}</p><p>${esc(venueOf(c))}</p><span class="code-chip">${esc(c.categorieNom||c.categorieCodeUnipop||'UniPop')}</span></div><div class="chev">›</div></article>`}
 
-function findSite(c){const a=c.adresseCours||{};const candidates=[a.nom,a.localite,`${a.rueNumero||''} ${a.codePostal||''} ${a.localite||''}`].filter(Boolean).map(norm);let best=null,bestScore=0;for(const s of sitesData.locations||[]){if(s.active===false)continue;const names=[s.name,...(s.aliases||[])].map(norm).filter(Boolean);let score=0;for(const q of candidates){for(const n of names){if(q===n)score=Math.max(score,100);else if(q.includes(n)||n.includes(q))score=Math.max(score,80);}}
- const addr=norm(s.address||'');const ca=norm(`${a.rueNumero||''} ${a.codePostal||''} ${a.localite||''}`);if(ca&&addr){const tokens=ca.split(' ').filter(x=>x.length>2);const matched=tokens.filter(t=>addr.includes(t)).length;score=Math.max(score,matched*8)}if(score>bestScore){best=s;bestScore=score;}}
-return bestScore>=16?best:null;}
+function findSite(c){
+  const a=c.adresseCours||{};
+  const courseName=norm(a.nom||'');
+  const courseStreet=norm(a.rueNumero||'');
+  const coursePostal=norm(a.codePostal||'');
+  const courseCity=norm(a.localite||'');
+  const courseAddress=norm(`${a.rueNumero||''} ${a.codePostal||''} ${a.localite||''}`);
+  const activeSites=(sitesData.locations||[]).filter(s=>s.active!==false);
+
+  // 1. The explicit course-location name is authoritative.
+  //    Example: "Université Populaire Belval" must never fall back to another
+  //    Esch-sur-Alzette site merely because the city name also matches.
+  if(courseName){
+    const exact=activeSites.find(s=>[s.name,...(s.aliases||[])]
+      .map(norm).filter(Boolean).some(n=>n===courseName));
+    if(exact)return exact;
+
+    const contained=activeSites.filter(s=>[s.name,...(s.aliases||[])]
+      .map(norm).filter(Boolean).some(n=>
+        n.length>=6 && courseName.length>=6 && (n.includes(courseName)||courseName.includes(n))
+      ));
+    if(contained.length===1)return contained[0];
+  }
+
+  // 2. Exact/strong postal address match. Street + postal code takes priority
+  //    over locality because several UniPop/CNFPC sites are in Esch-sur-Alzette.
+  if(courseAddress){
+    const exactAddress=activeSites.find(s=>norm(s.address||'')===courseAddress);
+    if(exactAddress)return exactAddress;
+
+    const strongAddress=activeSites.filter(s=>{
+      const addr=norm(s.address||'');
+      if(!addr)return false;
+      const streetOk=courseStreet && addr.includes(courseStreet);
+      const postalOk=coursePostal && addr.includes(coursePostal);
+      return streetOk && postalOk;
+    });
+    if(strongAddress.length===1)return strongAddress[0];
+  }
+
+  // 3. Last-resort city matching is allowed only if there is exactly ONE active
+  //    site in that city. This prevents Belval from being mapped to a CNFPC site.
+  if(courseCity){
+    const cityMatches=activeSites.filter(s=>norm(s.address||'').includes(courseCity));
+    if(cityMatches.length===1)return cityMatches[0];
+  }
+
+  return null;
+}
 function legacyLocation(c){const key=norm(`${c.adresseCours?.nom||''}${c.adresseCours?.rueNumero||''}${c.adresseCours?.localite||''}`);const byCourse=legacyLocations.courses?.[norm(codeOf(c))];return byCourse?{...(legacyLocations._default||{}),...byCourse}:{...(legacyLocations._default||{}),...(legacyLocations.places?.[key]||{})};}
 function findRoom(c,site){if(!site)return null;const legacy=legacyLocation(c);const wanted=norm(legacy.room||c.salle||c.room||'');if(!wanted||wanted.includes('confirmer'))return null;return (site.rooms||[]).find(r=>[r.name,...(r.aliases||[])].map(norm).some(n=>n&&(n===wanted||n.includes(wanted)||wanted.includes(n))))||null;}
 function guideById(id){return (sitesData.guides||[]).find(g=>String(g.id)===String(id))||null;}
