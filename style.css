@@ -351,3 +351,183 @@ html.device-phone .info-page .simple-credit{
   font-size:12px !important;
   margin-top:40px !important;
 }
+
+
+/* =========================================================
+   V12 — Smartphone readability +20%
+   iPhone / Android phones only. Tablet/Desktop unchanged.
+   ========================================================= */
+
+html.device-phone .hero-home{
+  padding:54px 20px 42px !important;
+}
+
+html.device-phone .unipop-logo{
+  width:min(370px,90vw) !important;
+}
+
+html.device-phone .hero-home h1{
+  font-size:38px !important;
+  line-height:1.08 !important;
+}
+
+html.device-phone .hero-home>p{
+  font-size:21px !important;
+  line-height:1.48 !important;
+  max-width:520px !important;
+}
+
+html.device-phone .search-wrap input{
+  height:74px !important;
+  font-size:21px !important;
+  padding-left:50px !important;
+}
+
+html.device-phone .search-wrap .search-icon,
+html.device-phone .search-wrap button{
+  font-size:22px !important;
+}
+
+html.device-phone .primary-btn{
+  min-height:70px !important;
+  font-size:21px !important;
+  border-radius:16px !important;
+}
+
+html.device-phone .course-count,
+html.device-phone .muted{
+  font-size:16px !important;
+}
+
+html.device-phone .feature-title,
+html.device-phone .content>h2{
+  font-size:29px !important;
+  line-height:1.15 !important;
+}
+
+html.device-phone .feature-grid{
+  gap:12px !important;
+}
+
+html.device-phone .feature-card{
+  min-height:145px !important;
+  padding:17px 14px !important;
+}
+
+html.device-phone .feature-card strong{
+  font-size:17px !important;
+  line-height:1.25 !important;
+}
+
+html.device-phone .feature-card small{
+  font-size:14px !important;
+  line-height:1.35 !important;
+}
+
+html.device-phone .course-card{
+  padding:19px !important;
+}
+
+html.device-phone .course-card h3{
+  font-size:22px !important;
+}
+
+html.device-phone .course-card p{
+  font-size:17px !important;
+}
+
+html.device-phone .course-card small{
+  font-size:14px !important;
+}
+
+html.device-phone .detail-content h1{
+  font-size:36px !important;
+}
+
+html.device-phone .address,
+html.device-phone .lead{
+  font-size:20px !important;
+}
+
+html.device-phone .map-actions a,
+html.device-phone .resource-link{
+  min-height:62px !important;
+  font-size:18px !important;
+}
+
+html.device-phone .detail-section h3{
+  font-size:25px !important;
+}
+
+html.device-phone .detail-section p{
+  font-size:18px !important;
+}
+
+html.device-phone .stack-card{
+  padding:17px !important;
+}
+
+html.device-phone .stack-card strong{
+  font-size:19px !important;
+}
+
+html.device-phone .stack-card small{
+  font-size:16px !important;
+}
+
+html.device-phone .room-body h4{
+  font-size:22px !important;
+}
+
+html.device-phone .room-body p{
+  font-size:18px !important;
+}
+
+html.device-phone .pills span{
+  font-size:14px !important;
+  padding:8px 11px !important;
+}
+
+html.device-phone .info-line strong{
+  font-size:19px !important;
+}
+
+html.device-phone .info-line small{
+  font-size:17px !important;
+}
+
+html.device-phone .meta-card strong{
+  font-size:17px !important;
+}
+
+html.device-phone .meta-card small{
+  font-size:14px !important;
+}
+
+html.device-phone .topbar strong{
+  font-size:20px !important;
+}
+
+html.device-phone .bottom-nav{
+  height:calc(90px + var(--safe-bottom)) !important;
+}
+
+html.device-phone .bottom-nav button>span{
+  font-size:28px !important;
+}
+
+html.device-phone .bottom-nav small{
+  font-size:13px !important;
+}
+
+html.device-phone .info-page>p{
+  font-size:19px !important;
+}
+
+html.device-phone .unipop-contact-card h2{
+  font-size:24px !important;
+}
+
+html.device-phone .unipop-contact-card>a{
+  font-size:19px !important;
+}
