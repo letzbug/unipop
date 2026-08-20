@@ -7,16 +7,15 @@
   <meta name="color-scheme" content="dark">
   <title>UniPop Participant</title>
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="style.css?v=1">
+  <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
   <div class="app-shell">
     <main>
       <section id="searchScreen" class="screen active">
         <div class="hero-home">
-          <div class="brand" aria-label="UniPop">
-            <span class="brand-mark"><i></i><b></b></span>
-            <span>Uni<span>Pop</span></span>
+          <div class="brand-logo-wrap" aria-label="UniPop Luxembourg">
+            <img class="unipop-logo" src="assets/unipop-logo-white.png" alt="UniPop Luxembourg">
           </div>
           <h1>Bienvenue !</h1>
           <p>Entrez le nom ou le code de votre cours pour retrouver toutes les informations utiles.</p>
@@ -60,6 +59,7 @@
             <div class="info-line"><span>⌖</span><div><strong id="courseVenue"></strong><small id="courseRoom"></small></div></div>
           </div>
           <button id="showLocation" class="primary-btn arrow-btn">Voir le lieu & l'accès <span>→</span></button>
+          <button id="registerCourse" class="register-btn" type="button"><span>↗</span><span><strong>S’inscrire / voir sur UniPop</strong><small>Recherche la page officielle du cours</small></span></button>
           <section id="courseAboutSection" class="detail-section"><h3>À propos du cours</h3><p id="courseDescription"></p></section>
           <section id="courseMetaSection" class="detail-section meta-grid"></section>
         </div>
@@ -89,7 +89,7 @@
       <section id="infoScreen" class="screen">
         <header class="topbar"><span></span><strong>Informations</strong><span></span></header>
         <div class="content info-page">
-          <div class="brand small"><span class="brand-mark"><i></i><b></b></span><span>Uni<span>Pop</span></span></div>
+          <div class="brand-logo-wrap small"><img class="unipop-logo" src="assets/unipop-logo-white.png" alt="UniPop Luxembourg"></div>
           <h1>UniPop Participant</h1>
           <p>Retrouvez votre cours, votre lieu, votre salle et les informations pratiques avant votre arrivée.</p>
           <div class="info-card"><strong>Données</strong><p>Les informations de cours proviennent du catalogue UniPop. Les informations de lieux, salles, photos, plans et tutoriels sont fournies par UniPop Go Sites.</p></div>
@@ -105,6 +105,6 @@
       <button data-go="infoScreen"><span>ⓘ</span><small>Info</small></button>
     </nav>
   </div>
-<script src="app.js?v=1"></script>
+<script src="app.js?v=2"></script>
 </body>
 </html>

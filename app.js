@@ -55,12 +55,32 @@ function guideById(id){return (sitesData.guides||[]).find(g=>String(g.id)===Stri
 function guideFor(site,room){return room?guideById(room.guideId):guideById(site?.guideId);}
 function guideUrl(g){return g?(g.path?siteAsset(g.path):(g.url||'')):'';}
 
+function directCourseUrl(c){
+  // Future-proof: if the catalogue later exposes an official course URL, use it directly.
+  const keys=['courseUrl','coursUrl','urlCours','url','detailUrl','registrationUrl','inscriptionUrl'];
+  for(const k of keys){const v=c?.[k];if(typeof v==='string'&&/^https?:\/\//i.test(v)&&/unipop\.lu/i.test(v))return v;}
+  return '';
+}
+function uniPopCourseSearchUrl(c){
+  const code=codeOf(c).trim();
+  const title=titleOf(c).trim();
+  const query=['site:unipop.lu',code?`\"${code}\"`:'',title?`\"${title}\"`:''].filter(Boolean).join(' ');
+  return `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+}
+function openRegistration(c){
+  if(!c)return;
+  const url=directCourseUrl(c)||uniPopCourseSearchUrl(c);
+  window.open(url,'_blank','noopener,noreferrer');
+}
+
+
 function scheduleSummary(c){const txt=(c.horairePrevu||'').replace(/\n/g,' · ').replace(/\s+/g,' ').trim();return txt||c.duree||'';}
 function openCourse(c){if(!c)return;currentCourse=c;currentSite=findSite(c);currentRoom=findRoom(c,currentSite);renderCourse();showScreen('courseScreen');$('#suggestions').classList.add('hidden');}
 function renderFavoriteButton(){if(!currentCourse)return;$('#favoriteTop').textContent=isFavorite(currentCourse)?'♥':'♡';}
 $('#favoriteTop').onclick=()=>currentCourse&&toggleFavorite(currentCourse);
 function renderCourse(){const c=currentCourse,s=currentSite,r=currentRoom;const hero=r?.hero||s?.hero||s?.heroThumb||'';$('#courseHero').style.backgroundImage=hero?`url("${siteAsset(hero)}")`:'linear-gradient(135deg,#0d2e55,#07111f)';$('#courseCode').textContent=codeOf(c);$('#courseCategory').textContent=c.categorieNom||c.langueCoursNom||'';$('#courseTitle').textContent=titleOf(c);const d1=parseDMY(c.dateDebut),d2=parseDMY(c.dateFin);$('#courseDates').textContent=d1?(d2&&d1.getTime()!==d2.getTime()?`${formatDate(d1)} – ${formatDate(d2)}`:formatDate(d1)):(c.dateDebut||'Date à confirmer');$('#courseSchedule').textContent=scheduleSummary(c);$('#courseVenue').textContent=s?.name||venueOf(c);$('#courseRoom').textContent=r?.name||legacyLocation(c).room||'Salle à confirmer';$('#courseDescription').textContent=c.description||c.renseignements||'Les informations détaillées de ce cours sont disponibles dans le catalogue UniPop.';$('#courseAboutSection').classList.toggle('hidden',!($('#courseDescription').textContent));const meta=[];if(c.niveau)meta.push(['Niveau',c.niveau]);if(c.langueCoursNom)meta.push(['Langue',c.langueCoursNom]);if(c.duree)meta.push(['Durée',c.duree]);if(c.nbPlaces)meta.push(['Places',String(c.nbPlaces)]);$('#courseMetaSection').innerHTML=meta.map(([a,b])=>`<div class="meta-card"><small>${esc(a)}</small><strong>${esc(b)}</strong></div>`).join('');$('#courseMetaSection').classList.toggle('hidden',!meta.length);$('#showLocation').disabled=!s;$('#showLocation').style.opacity=s?'1':'.45';renderFavoriteButton();}
 $('#showLocation').onclick=()=>{if(currentSite){renderLocation();showScreen('locationScreen')}};
+$('#registerCourse').onclick=()=>openRegistration(currentCourse);
 
 function renderLocation(){const s=currentSite,r=currentRoom;if(!s)return;$('#locationName').textContent=s.name||venueOf(currentCourse);$('#locationAddress').textContent=s.address||addressOfCourse(currentCourse);$('#locationDescription').textContent=s.description||'';$('#locationDescription').classList.toggle('hidden',!s.description);const hero=s.hero||s.heroThumb;$('#locationHero').style.backgroundImage=hero?`url("${siteAsset(hero)}")`:'linear-gradient(135deg,#123a63,#07111f)';const dest=(s.lat&&s.lng)?`${s.lat},${s.lng}`:encodeURIComponent((s.address||s.name||''));$('#googleMaps').href=`https://www.google.com/maps/search/?api=1&query=${dest}`;$('#appleMaps').href=`https://maps.apple.com/?q=${dest}`;
  const cards=[];if(s.parking)cards.push(['Parking',s.parking,s.parkingInfo]);if(s.transport)cards.push(['Transport public',s.transport,s.transportInfo]);if(s.accessInfo)cards.push(['Accès',s.accessInfo,'']);if(s.pmr)cards.push(['Accessibilité','Accessible PMR','']);$('#accessCards').innerHTML=cards.map(([t,a,b])=>`<div class="stack-card"><strong>${esc(t)} · ${esc(a)}</strong>${b?`<small>${esc(b)}</small>`:''}</div>`).join('');$('#accessSection').classList.toggle('hidden',!cards.length);
@@ -76,4 +96,4 @@ function renderFavorites(){const ids=favorites();const list=ids.map(id=>training
 async function loadData(){try{const [rt,rs,rl]=await Promise.all([fetch(DATA_URL,{cache:'no-store'}),fetch(SITES_URL+'?v='+Date.now(),{cache:'no-store'}).catch(()=>null),fetch(LOCATIONS_URL+'?v='+Date.now(),{cache:'no-store'}).catch(()=>null)]);if(!rt.ok)throw new Error('Catalogue');trainings=await rt.json();if(rs?.ok){const d=await rs.json();if(Array.isArray(d.locations))sitesData=d;}if(rl?.ok)legacyLocations=await rl.json();$('#catalogueStatus').textContent=`${upcomingCourses().length} cours disponibles`;renderFavorites();}catch(e){console.error(e);$('#catalogueStatus').textContent='Catalogue indisponible — vérifiez votre connexion.'}}
 loadData();
 
-if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js?v=1').catch(()=>{});}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js?v=2').catch(()=>{});}
