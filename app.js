@@ -30,9 +30,16 @@ function toggleFavorite(c){let f=favorites();const id=String(c.id); f=f.includes
 
 function showScreen(id,push=true){const active=$('.screen.active');if(push&&active&&active.id!==id)backStack.push(active.id);$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+id)?.classList.add('active');$$('.bottom-nav button').forEach(b=>b.classList.toggle('active',b.dataset.go===id));window.scrollTo(0,0);}
 $$('[data-back]').forEach(b=>b.onclick=()=>showScreen(backStack.pop()||'searchScreen',false));
-$$('.bottom-nav button').forEach(b=>b.onclick=()=>{if(b.dataset.go==='resultsScreen'){renderResults(lastResults.length?lastResults:upcomingCourses().slice(0,30),'Prochains cours');}if(b.dataset.go==='favoritesScreen')renderFavorites();showScreen(b.dataset.go,false)});
+$$('.bottom-nav button').forEach(b=>b.onclick=()=>{if(b.dataset.go==='resultsScreen'){renderResults(unipopUpcomingCourses().slice(0,30),'Cours UniPop à découvrir');}if(b.dataset.go==='favoritesScreen')renderFavorites();showScreen(b.dataset.go,false)});
 
 function upcomingCourses(){const today=new Date(); today.setHours(0,0,0,0);return trainings.filter(c=>{const end=parseDMY(c.dateFin)||parseDMY(c.dateDebut);return !end||end>=today}).sort((a,b)=>(parseDMY(a.dateDebut)||0)-(parseDMY(b.dateDebut)||0));}
+
+function isUniPopCourse(c){
+  return String(c?.organisateur?.code||'').trim().toUpperCase()==='UNIPOP';
+}
+function unipopUpcomingCourses(){
+  return upcomingCourses().filter(isUniPopCourse);
+}
 function scoreCourse(c,q){const nq=norm(q);if(!nq)return 999;const code=norm(codeOf(c)),title=norm(titleOf(c));if(code===nq)return 0;if(code.startsWith(nq))return 1;if(title.startsWith(nq))return 2;if(code.includes(nq))return 3;if(title.includes(nq))return 4;const words=nq.split(' ').filter(Boolean);return words.every(w=>title.includes(w))?5:999;}
 function searchCourses(q,limit=30){return upcomingCourses().map(c=>[scoreCourse(c,q),c]).filter(x=>x[0]<999).sort((a,b)=>a[0]-b[0]||(parseDMY(a[1].dateDebut)||0)-(parseDMY(b[1].dateDebut)||0)).slice(0,limit).map(x=>x[1]);}
 
@@ -112,7 +119,7 @@ function renderFavorites(){
 async function loadData(){try{const [rt,rs,rl]=await Promise.all([fetch(DATA_URL,{cache:'no-store'}),fetch(SITES_URL+'?v='+Date.now(),{cache:'no-store'}).catch(()=>null),fetch(LOCATIONS_URL+'?v='+Date.now(),{cache:'no-store'}).catch(()=>null)]);if(!rt.ok)throw new Error('Catalogue');trainings=await rt.json();if(rs?.ok){const d=await rs.json();if(Array.isArray(d.locations))sitesData=d;}if(rl?.ok)legacyLocations=await rl.json();$('#catalogueStatus').textContent=`${upcomingCourses().length} cours disponibles`;renderFavorites();}catch(e){console.error(e);$('#catalogueStatus').textContent='Catalogue indisponible — vérifiez votre connexion.'}}
 loadData();
 
-// v5: avoid stale mixed app versions on GitHub Pages.
+// v6: UniPop-only discovery list + cache safety.
 // This app is online-first; remove older service workers/caches without touching localStorage (favorites).
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.getRegistrations().then(regs => Promise.all(regs.map(r => r.unregister()))).catch(()=>{});
