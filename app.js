@@ -59,7 +59,16 @@ function isUniPopCourse(c){
   return String(c?.organisateur?.code||'').trim().toUpperCase()==='UNIPOP';
 }
 function unipopUpcomingCourses(){
-  return upcomingCourses().filter(isUniPopCourse);
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  return trainings
+    .filter(isUniPopCourse)
+    .filter(c => {
+      const start = parseDMY(c.dateDebut);
+      return start && start >= today;
+    })
+    .sort((a,b) => (parseDMY(a.dateDebut)||0) - (parseDMY(b.dateDebut)||0));
 }
 function scoreCourse(c,q){const nq=norm(q);if(!nq)return 999;const code=norm(codeOf(c)),title=norm(titleOf(c));if(code===nq)return 0;if(code.startsWith(nq))return 1;if(title.startsWith(nq))return 2;if(code.includes(nq))return 3;if(title.includes(nq))return 4;const words=nq.split(' ').filter(Boolean);return words.every(w=>title.includes(w))?5:999;}
 function searchCourses(q,limit=30){return upcomingCourses().map(c=>[scoreCourse(c,q),c]).filter(x=>x[0]<999).sort((a,b)=>a[0]-b[0]||(parseDMY(a[1].dateDebut)||0)-(parseDMY(b[1].dateDebut)||0)).slice(0,limit).map(x=>x[1]);}
