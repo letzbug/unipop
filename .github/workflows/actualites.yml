@@ -1,0 +1,46 @@
+name: Update UniPop actualites
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: unipop-actualites
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install scraper
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4 playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Read UniPop actualites
+        run: python scripts/fetch_actualites.py
+
+      - name: Publish changes
+        run: |
+          if git diff --quiet -- actualites.json; then
+            echo "No new actualites."
+            exit 0
+          fi
+          git config user.name "UniPop Actualites Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add actualites.json
+          git commit -m "Update UniPop actualites"
+          git push
